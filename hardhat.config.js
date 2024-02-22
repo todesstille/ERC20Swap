@@ -20,24 +20,8 @@ module.exports = {
         blockNumber: 19280000  
       }
     },
-    chapel: {
-      url: process.env.BSC_TESTNET_URL,
-      accounts: [process.env.PRIVATE_KEY]
-    },
-    bsc: {
-      url: process.env.BSC_URL,
-      accounts: [process.env.PRIVATE_KEY]
-    },
-    goerli: {
-      url: process.env.GOERLI_URL,
-      accounts: [process.env.PRIVATE_KEY]
-    },
     sepolia: {
       url: process.env.SEPOLIA_URL,
-      accounts: [process.env.PRIVATE_KEY]
-    },
-    mumbai: {
-      url: process.env.MUMBAI_URL,
       accounts: [process.env.PRIVATE_KEY]
     },
   },

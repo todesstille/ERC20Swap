@@ -5,6 +5,7 @@
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
 const hre = require("hardhat");
+require('dotenv').config();
 
 async function main() {
 
@@ -12,11 +13,20 @@ async function main() {
   const swapper = await ERC20Swapper.deploy();
   await swapper.deployed();
 
-  const tx = await swapper.__ERC20Swapper_init("0x1b81D678ffb9C0263b24A97847620C99d213eB14", 3000);
+  const ERC1967Proxy = await ethers.getContractFactory("ERC1967Proxy");
+  const proxy = await ERC1967Proxy.deploy(swapper.address, "0x")
+
+  const tx = await proxy.__ERC20Swapper_init(
+    process.env.ROUTER, 
+    process.env.SWAP_FEE
+  );
   await tx.wait();
 
   console.log(
-    `Swapper deployed to ${swapper.address}`
+    `Swapper deployed to ${proxy.address}`
+  );
+  console.log(
+    `with the implementation at ${swapper.address}`
   );
 }
 
