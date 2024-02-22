@@ -7,20 +7,16 @@
 const hre = require("hardhat");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
 
-  const lockedAmount = hre.ethers.utils.parseEther("0.001");
+  const ERC20Swapper = await hre.ethers.getContractFactory("ERC20Swapper");
+  const swapper = await ERC20Swapper.deploy();
+  await swapper.deployed();
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
-  await lock.deployed();
+  const tx = await swapper.__ERC20Swapper_init("0x1b81D678ffb9C0263b24A97847620C99d213eB14", 3000);
+  await tx.wait();
 
   console.log(
-    `Lock with ${ethers.utils.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
+    `Swapper deployed to ${swapper.address}`
   );
 }
 

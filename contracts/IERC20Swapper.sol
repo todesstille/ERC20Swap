@@ -5,7 +5,7 @@ interface IERC20Swapper {
     
     struct SwapData {
         address router;
-        uint24 routerFee;
+        uint24 swapFee;
     }
 
     /// @dev swaps the `msg.value` Ether to at least `minAmount` of tokens in `address`, or reverts
