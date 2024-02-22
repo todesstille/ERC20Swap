@@ -2,9 +2,10 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
 const uniswapV2Router = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
-const uniswapV3Router = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45";
+const uniswapV3Router = "0xE592427A0AEce92De3Edee1F18E0157C05861564";
 const eth1 = ethers.utils.parseEther("1");
 const expectedUsdtV2 = ethers.BigNumber.from("2917153871");
+const expectedUsdtV3 = ethers.BigNumber.from("2919653252");
 
 describe("ERC20 Swapper", function () {
 
@@ -40,14 +41,14 @@ describe("ERC20 Swapper", function () {
     });
 
     it("must revert", async () => {
-      // await expect(swapper.connect(alice).changeOwners([bob.address], true))
-      //   .to.be.revertedWith("Ownable: caller is not the owner");
-      // await expect(swapper.connect(alice).changeMinters([bob.address], true))
-      //   .to.be.revertedWith("Ownable: caller is not the owner");
-      // await expect(swapper.connect(alice).mint(bob.address, 1))
-      //   .to.be.revertedWith("Caller is not a minter");
-      // await expect(swapper.connect(alice).burn(bob.address, 1))
-      //   .to.be.revertedWith("Caller is not a minter");
+      await expect(swapper.connect(alice).transferOwnership(bob.address))
+        .to.be.revertedWith("Ownable: caller is not the owner");
+      await expect(swapper.connect(alice).changeSwapData(uniswapV2Router, 1))
+        .to.be.revertedWith("Ownable: caller is not the owner");
+      await expect(swapper.changeSwapData(ethers.constants.AddressZero, 0))
+        .to.be.revertedWith("ERC20Swapper: Router must not be zero address");
+      await expect(swapper.swapEtherToToken(usdt.address, 0))
+        .to.be.revertedWith("ERC20Swapper: ETH value must be non-zero");
     });
 
   });
@@ -82,18 +83,17 @@ describe("ERC20 Swapper", function () {
 
     it("Could swap", async () => {
       const balanceBefore = await usdt.balanceOf(alice.address);
-      const tx = await swapper.connect(alice).populateTransaction.swapEtherToToken(usdt.address, 0, {value: eth1});
-      await swapper.connect(alice).swapEtherToToken(usdt.address, 0, {value: eth1});
-      // expect((await usdt.balanceOf(alice.address)).sub(balanceBefore))
-      //   .to.equal(expectedUsdtV2);
+      await swapper.connect(alice).swapEtherToToken(usdt.address, expectedUsdtV3, {value: eth1});
+      expect((await usdt.balanceOf(alice.address)).sub(balanceBefore))
+        .to.equal(expectedUsdtV3);
     });
 
-    // it("Cant swap lesser then min", async () => {
-    //   await expect(
-    //     swapper.connect(alice).swapEtherToToken(usdt.address, expectedUsdtV2.add(1), {value: eth1})
-    //   ).to.be.revertedWith('UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT');
+    it("Cant swap lesser then min", async () => {
+      await expect(
+        swapper.connect(alice).swapEtherToToken(usdt.address, expectedUsdtV3.add(1), {value: eth1})
+      ).to.be.revertedWith('Too little received');
       
-    // });
+    });
   });
 
   describe("Upgradeability", function () {

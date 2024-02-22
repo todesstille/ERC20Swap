@@ -10,10 +10,6 @@ import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/v3-periphery/contracts/interfaces/IPeripheryImmutableState.sol";
 
 import "./IERC20Swapper.sol";
-import "./IWETH9.sol";
-
-// Uncomment this line to use console.log
-import "hardhat/console.sol";
 
 contract ERC20Swapper is IERC20Swapper, Initializable, UUPSUpgradeable, OwnableUpgradeable {
 
@@ -29,7 +25,7 @@ contract ERC20Swapper is IERC20Swapper, Initializable, UUPSUpgradeable, OwnableU
         _setSwapData(router, swapFee);
     }
 
-    function swapEtherToToken(address token, uint minAmount) external payable override returns (uint) {
+    function swapEtherToToken(address token, uint minAmount) external payable returns (uint) {
         uint amountIn = msg.value;
         require(amountIn != 0, "ERC20Swapper: ETH value must be non-zero");
 
@@ -41,8 +37,7 @@ contract ERC20Swapper is IERC20Swapper, Initializable, UUPSUpgradeable, OwnableU
 
         uint256 amountOut = IERC20(token).balanceOf(msg.sender) - balanceBefore;
         
-        // This situation should not occure, and this line doesnt spoil the coverage
-        assert(amountOut >= minAmount);
+        require(amountOut >= minAmount, "ERC20Swapper: insufficient swapped amount");
 
         return amountOut;
     }
@@ -61,12 +56,6 @@ contract ERC20Swapper is IERC20Swapper, Initializable, UUPSUpgradeable, OwnableU
         ISwapRouter router = ISwapRouter(swapData.router);
         address weth9 = IPeripheryImmutableState(swapData.router).WETH9();
 
-        IWETH9(weth9).deposit{value: amountIn}();
-        IWETH9(weth9).approve(swapData.router, amountIn);
-
-        console.log(IWETH9(weth9).balanceOf(address(this)));
-        console.log(amountIn);
-
         ISwapRouter.ExactInputSingleParams memory params = ISwapRouter.ExactInputSingleParams({
             tokenIn: weth9,
             tokenOut: tokenOut,
@@ -78,7 +67,7 @@ contract ERC20Swapper is IERC20Swapper, Initializable, UUPSUpgradeable, OwnableU
             sqrtPriceLimitX96: 0
         });
 
-        router.exactInputSingle(params);
+        router.exactInputSingle{value: amountIn}(params);
     }
 
     function _setSwapData(address router, uint24 swapFee) internal {
