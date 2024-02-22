@@ -17,3 +17,7 @@ npx hardhat verify --network <network-of-choice>
 ```
 
 You could also deploy it as standalone, without proxy, if you want to make it more gas-efficient (but less flexible)
+
+This implementation rates flexibility over gas-economy. Gas costs could be redused by bypassing the router and interacting directly with the DEX pools, but it will make it less flexible.
+
+Also this contract at any moment could be made completely trustless by renouncing ownership, but this will make it stick to exactly one router.
