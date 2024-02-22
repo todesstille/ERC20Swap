@@ -4,6 +4,8 @@ Swapping contract for exchanging Ether (or native coin for different blockchains
 
 Could rely on any Uniswap V2/V3-compatible router (e.g. PancakeSwap, QuickSwap, SushiSwap et cetera)
 
+This repo relies on ETH forking in tests, so please set your mainnet provider in .env
+
 ## Deployment
 
 1. Install dependencies with `npm install` or `yarn install`

@@ -10,13 +10,16 @@ require('dotenv').config();
 async function main() {
 
   const ERC20Swapper = await hre.ethers.getContractFactory("ERC20Swapper");
-  const swapper = await ERC20Swapper.deploy();
-  await swapper.deployed();
+  const logic = await ERC20Swapper.deploy();
+  await logic.deployed();
 
   const ERC1967Proxy = await ethers.getContractFactory("ERC1967Proxy");
-  const proxy = await ERC1967Proxy.deploy(swapper.address, "0x")
+  const proxy = await ERC1967Proxy.deploy(logic.address, "0x")
+  await proxy.deployed();
 
-  const tx = await proxy.__ERC20Swapper_init(
+  const swapper = await ethers.getContractAt("ERC20Swapper", proxy.address);
+
+  const tx = await swapper.__ERC20Swapper_init(
     process.env.ROUTER, 
     process.env.SWAP_FEE
   );
@@ -26,7 +29,7 @@ async function main() {
     `Swapper deployed to ${proxy.address}`
   );
   console.log(
-    `with the implementation at ${swapper.address}`
+    `with the implementation at ${logic.address}`
   );
 }
 
