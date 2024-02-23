@@ -48,6 +48,12 @@ describe("ERC20 Economy Swapper", function () {
 
   describe("Uniswap V2 swap", function () {
 
+    it("Correct return amount", async () => {
+      let returnAmount = await swapper.connect(alice)
+        .callStatic.swapEtherToToken(usdt.address, 0, {value: eth1});
+      expect(returnAmount).to.equal(expectedUsdtV2);
+    });
+
     it("Could swap usdt", async () => {
       const balanceBefore = await usdt.balanceOf(alice.address);
       await swapper.connect(alice).swapEtherToToken(usdt.address, expectedUsdtV2, {value: eth1});

@@ -35,7 +35,7 @@ contract ERC20EconomySwapper is IERC20EconomySwapper {
 
         IUniswapV2Pair pair = IUniswapV2Pair(pairAddress);
         
-        (uint256 reserve0, uint256 reserve1) = address(factory).getReserves(weth, token);
+        (uint256 reserve0, uint256 reserve1) = factory.getReserves(weth, token);
 
         uint256 amountOut = amountIn.getAmountOut(reserve0, reserve1);
 
