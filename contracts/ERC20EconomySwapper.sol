@@ -8,9 +8,7 @@ import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
 
 import "./libraries/UniswapV2Library.sol";
 
-import "./IERC20EconomySwapper.sol";
-
-import "hardhat/console.sol";
+import "./interfaces/IERC20EconomySwapper.sol";
 
 contract ERC20EconomySwapper is IERC20EconomySwapper {
 

@@ -9,7 +9,7 @@ import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/v3-periphery/contracts/interfaces/IPeripheryImmutableState.sol";
 
-import "./IERC20Swapper.sol";
+import "./interfaces/IERC20Swapper.sol";
 
 contract ERC20Swapper is IERC20Swapper, Initializable, UUPSUpgradeable, OwnableUpgradeable {
 
