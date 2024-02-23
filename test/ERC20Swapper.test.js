@@ -1,5 +1,6 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
+require('dotenv').config();
 
 const uniswapV2Router = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
 const uniswapV3Router = "0xE592427A0AEce92De3Edee1F18E0157C05861564";
@@ -10,6 +11,19 @@ const expectedUsdtV3 = ethers.BigNumber.from("2919653252");
 describe("ERC20 Swapper", function () {
 
   before(async () => {
+
+    await network.provider.request({
+      method: "hardhat_reset",
+      params: [
+        {
+          forking: {
+            jsonRpcUrl: process.env.ETH_URL,
+            blockNumber: 19280000,
+          },
+        },
+      ],
+    });
+
     [admin, alice, bob, charlie] = await ethers.getSigners();
     
     ERC20Swapper = await ethers.getContractFactory("ERC20Swapper");

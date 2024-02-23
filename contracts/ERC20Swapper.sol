@@ -27,7 +27,7 @@ contract ERC20Swapper is IERC20Swapper, Initializable, UUPSUpgradeable, OwnableU
 
     function swapEtherToToken(address token, uint minAmount) external payable returns (uint) {
         uint amountIn = msg.value;
-        require(amountIn != 0, "ERC20Swapper: ETH value must be non-zero");
+        require(amountIn > 0, "ERC20Swapper: ETH value must be non-zero");
 
         uint256 balanceBefore = IERC20(token).balanceOf(msg.sender);
 

@@ -14,12 +14,6 @@ module.exports = {
     },
   },
   networks: {
-    hardhat: {
-      forking: {
-        url: process.env.ETH_URL,
-        blockNumber: 19280000  
-      }
-    },
     sepolia: {
       url: process.env.SEPOLIA_URL,
       accounts: [process.env.PRIVATE_KEY]
