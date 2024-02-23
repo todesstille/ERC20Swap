@@ -39,3 +39,6 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+// Swapper deployed to 0x1C6FD966E1E06Ba4B69e0e3d5Fc0D44aaf48e188
+// with the implementation at 0x3aC9C88E9096b6e1426FfA3FFD9B39c46938DDBb

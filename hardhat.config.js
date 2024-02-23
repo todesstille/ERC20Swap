@@ -18,6 +18,10 @@ module.exports = {
       url: process.env.SEPOLIA_URL,
       accounts: [process.env.PRIVATE_KEY]
     },
+    chapel: {
+      url: process.env.BSC_TESTNET_URL,
+      accounts: [process.env.PRIVATE_KEY]
+    },
   },
   etherscan: {
     apiKey: process.env.API_KEY,
